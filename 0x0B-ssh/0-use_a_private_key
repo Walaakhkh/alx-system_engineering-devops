@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # Allow us to connect to my server using
-ssh -i ~/.ssh/id_rsa ubuntu@52.91.135.26
+ssh -i ~/.ssh/id-rsa ubuntu@52.91.135.26
 
