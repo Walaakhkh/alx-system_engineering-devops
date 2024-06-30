@@ -1,13 +1,14 @@
-# using puppet to make changes to the defult ssh config file
-# so that one can connect to a server without typing a password
+# using puppet to make changes to the default ssh config file
+# so that one can connect to a server without typing a password.
 
-#include stdlib
+include stdlib
+
 file_line { 'SSH Private Key':
-	path			=> '/etc/ssh/ssh_config',
-	line			=> '	IdentityFile ~/.ssh/school',
-	match			=> '^[#]+[\s]*(?i)IdentityFile[\s\+~/.ssh/id_rsa$',
-	replace			=> true,
-	append_on_no_match	=> true
+  path               => '/etc/ssh/ssh_config',
+  line               => '    IdentityFile ~/.ssh/school',
+  match              => '^[#]+[\s]*(?i)IdentityFile[\s]+~/.ssh/id_rsa$',
+  replace            => true,
+  append_on_no_match => true
 }
 
 # Regex match explanation
