@@ -1,0 +1,15 @@
+#!/bin/env bash
+
+# Update the Nginx configuration file to listen on port 8080
+sed -i 's/listen 80;/listen 8080;/g' /etc/nginx/sites-available/default
+
+# Ensure the Nginx user is set in the Nginx configuration file
+sed -i 's/user www-data;/user nginx;/g' /etc/nginx/nginx.conf
+
+# Create the nginx user if it does not exist
+if ! id -u nginx > /dev/null 2>&1; then
+    useradd -r nginx
+fi
+
+# Restart Nginx to apply changes
+service nginx restart
