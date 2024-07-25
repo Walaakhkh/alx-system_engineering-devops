@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Check if the user argument is provided
-if [ $# -eq 0 ]; then
+if [ $# -ne 1 ]; then
   echo "Usage: $0 <username>"
   exit 1
 fi
@@ -16,5 +16,7 @@ if ! id "$USERNAME" &>/dev/null; then
 fi
 
 # Run the whoami command as the specified user
-su -c "whoami" "$USERNAME"
+# -m preserves the environment (important for `whoami` to work correctly without the user's home directory)
+# -c specifies the command to run
+su -m -c "whoami" "$USERNAME"
 
