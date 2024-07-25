@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 # Check if the user argument is provided
 if [ $# -eq 0 ]; then
   echo "Usage: $0 <username>"
@@ -6,8 +7,14 @@ if [ $# -eq 0 ]; then
 fi
 
 # Store the provided username
-USERNAME=$1
+USERNAME="$1"
+
+# Check if the user exists on the system
+if ! id "$USERNAME" &>/dev/null; then
+  echo "Error: User '$USERNAME' does not exist."
+  exit 1
+fi
 
 # Run the whoami command as the specified user
-su -c "whoami" $USERNAME
+su -c "whoami" "$USERNAME"
 
