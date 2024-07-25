@@ -4,13 +4,17 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-# Update package lists and install Nginx
+# Update package lists
 apt-get update
+
+# Install Nginx
 apt-get install -y nginx
 
-# Create an HTML file with "Hello World!" content
+# Create or overwrite the default index.html with "Hello World!"
 echo "Hello World!" > /var/www/html/index.html
 
-# Ensure Nginx is running and configured to start on boot
-# Instead of using systemctl, use the service command
+# Ensure Nginx is running
 service nginx start
+
+# Verify Nginx is serving the correct content
+curl -sI localhost | grep "200 OK" && echo "Nginx is running and serving content correctly."
