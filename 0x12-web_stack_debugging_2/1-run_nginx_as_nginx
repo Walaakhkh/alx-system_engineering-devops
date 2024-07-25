@@ -1,24 +1,52 @@
 #!/usr/bin/env bash
+# This script configures Nginx to run as the nginx user and listen on port 8080.
 
-# Update the Nginx configuration file to set the user to 'nginx'
-# and change the listening port to 8080.
+# Define the paths
+NGINX_CONF="/etc/nginx/nginx.conf"
+DEFAULT_SITE_CONF="/etc/nginx/sites-available/default"
+WEB_ROOT="/var/www/html"
 
-# Create a backup of the original configuration file
-cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+# Check if the Nginx configuration file exists
+if [ ! -f "$NGINX_CONF" ]; then
+  echo "Error: Nginx configuration file not found at $NGINX_CONF"
+  exit 1
+fi
 
-# Use sed to update the user and port in the Nginx configuration
-sed -i 's/^user .*/user nginx;/g' /etc/nginx/nginx.conf
-sed -i 's/listen 80;/listen 8080;/g' /etc/nginx/sites-available/default
+# Backup the original Nginx configuration file
+cp "$NGINX_CONF" "${NGINX_CONF}.backup"
+
+# Modify the user and listening port in the Nginx configuration
+sed -i 's/^user .*/user nginx;/g' "$NGINX_CONF"
+
+# Check if the default site configuration file exists
+if [ ! -f "$DEFAULT_SITE_CONF" ]; then
+  echo "Error: Default site configuration file not found at $DEFAULT_SITE_CONF"
+  exit 1
+fi
+
+sed -i 's/listen 80;/listen 8080;/g' "$DEFAULT_SITE_CONF"
+sed -i 's/listen \[::\]:80;/listen \[::\]:8080;/g' "$DEFAULT_SITE_CONF"
 
 # Ensure the nginx user exists
 if ! id -u nginx &>/dev/null; then
-  echo "Creating nginx user..."
   useradd -r nginx
 fi
 
-# Change the ownership of the web directory to nginx
-chown -R nginx:nginx /var/www/html
+# Check if the web root directory exists
+if [ -d "$WEB_ROOT" ]; then
+  # Change the ownership of the web root directory to nginx
+  chown -R nginx:nginx "$WEB_ROOT"
+else
+  echo "Warning: Web root directory $WEB_ROOT not found. Skipping ownership change."
+fi
 
-# Restart Nginx to apply the changes
-service nginx restart
+# Check if the nginx service is available and restart it
+if systemctl is-active --quiet nginx; then
+  systemctl restart nginx
+elif service nginx status &>/dev/null; then
+  service nginx restart
+else
+  echo "Error: Nginx service not found or not installed."
+  exit 1
+fi
 

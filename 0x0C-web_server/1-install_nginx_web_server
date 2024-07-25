@@ -1,0 +1,15 @@
+#!/bin/bash
+# 1-install_nginx_web_server: Installs and configures Nginx to return "Hello World!" on the root URL.
+
+# Update package lists and install Nginx
+apt-get update
+apt-get install -y nginx
+
+# Create an HTML file with "Hello World!" content
+echo "Hello World!" > /var/www/html/index.html
+
+# Ensure Nginx is running and configured to start on boot
+# Instead of using systemctl, use the service command
+service nginx start
+service nginx enable
+
