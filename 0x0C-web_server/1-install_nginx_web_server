@@ -1,20 +1,9 @@
 #!/usr/bin/env bash
-# 1-install_nginx_web_server: Installs and configures Nginx to return "Hello World!" on the root URL.
+# Servers are the places where software generating and serving HTML pages
+# Installing nginx on web-01
 
-# Exit immediately if a command exits with a non-zero status.
-set -e
-
-# Update package lists
-apt-get update
-
-# Install Nginx
-apt-get install -y nginx
-
-# Create or overwrite the default index.html with "Hello World!"
-echo "Hello World!" > /var/www/html/index.html
-
-# Ensure Nginx is running
-service nginx start
-
-# Verify Nginx is serving the correct content
-curl -sI localhost | grep "200 OK" && echo "Nginx is running and serving content correctly."
+apt-get update -y
+apt-get install nginx -y
+sudo ufw allow 'Nginx HTTP'
+sh -c 'echo "Hello World!" > /var/www/html/index.html'
+service nginx restart
