@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Script to listen on port 98 on localhost and display incoming text
 
 # Start listening on port 98
