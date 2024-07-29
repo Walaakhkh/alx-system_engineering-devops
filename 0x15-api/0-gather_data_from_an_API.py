@@ -34,7 +34,7 @@ if __name__ == "__main__":
     user = user_response.json()
 
     todos_response = requests.get(f"{url}todos",
-             params={"userId": employee_id})
+            params={"userId": employee_id})
 
     if todos_response.status_code != 200:
         print("Todos not found")
