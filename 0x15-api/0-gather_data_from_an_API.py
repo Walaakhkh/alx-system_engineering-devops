@@ -1,69 +1,29 @@
 #!/usr/bin/python3
-"""
-0-gather_data_from_an_API.py
-
-Fetches and displays the TODO list progress for a given employee
-using a REST API.
-"""
-
 import requests
 import sys
 
-
-def fetch_employee_data(employee_id):
-    """
-    Fetches the employee data and their TODO list from the API.
-
-    Args:
-        employee_id (int): The ID of the employee.
-
-    Returns:
-        tuple: A tuple containing the user data and the list of TODOs.
-    """
-    user_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    todos_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}/todos"
-
-    user_response = requests.get(user_url)
-    todos_response = requests.get(todos_url)
-
-    if user_response.status_code != 200 or todos_response.status_code != 200:
-        return None, None
-
-    user = user_response.json()
-    todos = todos_response.json()
-    return user, todos
-
-
-def display_todo_progress(employee_name, todos):
-    """
-    Displays the TODO list progress for the employee.
-
-    Args:
-        employee_name (str): The name of the employee.
-        todos (list): The list of TODOs for the employee.
-    """
-    total_tasks = len(todos)
-    done_tasks = [task for task in todos if task.get('completed')]
-    number_of_done_tasks = len(done_tasks)
-
-    print(f"Employee {employee_name} is done with tasks"
-          f"({number_of_done_tasks}/{total_tasks}):")
-    for task in done_tasks:
-        print(f"\t {task.get('title')}")
-
-
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: ./0-gather_data_from_an_API.py <employee_id>")
-        sys.exit(1)
+    url = "https://jsonplaceholder.typicode.com/"
 
-    try:
-        employee_id = int(sys.argv[1])
-    except ValueError:
-        print("Employee ID must be an integer")
-        sys.exit(1)
+    employee_id = sys.argv[1]
+    
+    user_response = requests.get(url + "users/{}".format(employee_id))
 
-    user, todos = fetch_employee_data(employee_id)
-    if user and todos:
-        display_todo_progress(user.get('name'), todos)
+    user = user_response.jason()
 
+    params = {"userId": employee_id}
+
+    todos_response = requests.get(url + "todos", params=params)
+
+    todos = todos_response.jason{}
+
+    completed = []
+
+    for todo in todos:
+        if todo.get("completed") is True:
+            completed.append(todo.get("title"))
+
+    print("Employee {} is done with tasks({}/{})".format(user.get("name").
+                                                        len(completed). len(todos)))
+    for complete in completed:
+        print("/t {}".format(complete))
