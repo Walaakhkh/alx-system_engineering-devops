@@ -10,7 +10,6 @@ using a REST API.
 import requests
 import sys
 
-
 if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
 
@@ -20,6 +19,12 @@ if __name__ == "__main__":
 
     employee_id = sys.argv[1]
 
+    try:
+        employee_id = int(employee_id)
+    except ValueError:
+        print("Employee ID must be an integer")
+        sys.exit(1)
+
     user_response = requests.get(f"{url}users/{employee_id}")
 
     if user_response.status_code != 200:
@@ -28,8 +33,7 @@ if __name__ == "__main__":
 
     user = user_response.json()
 
-    todos_response = requests.get(f"{url}todos", params=
-            {"userId": employee_id})
+    todos_response = requests.get(f"{url}todos", params={"userId": employee_id})
 
     if todos_response.status_code != 200:
         print("Todos not found")
@@ -37,15 +41,10 @@ if __name__ == "__main__":
 
     todos = todos_response.json()
 
-    completed = [
-        todo.get("title") for todo in todos if todo.get("completed")
-    ]
+    completed = [todo.get("title") for todo in todos if todo.get("completed")]
+    total_tasks = len(todos)
 
-    print("Employee {} is done with tasks({}/{}):".format(
-        user.get("name"),
-        len(completed),
-        len(todos)
-    ))
+    print(f"Employee {user.get('name')} is done with tasks({len(completed)}/{total_tasks}):")
 
-    for complete in completed:
-        print("\t {}".format(complete))
+    for task in completed:
+        print(f"\t {task}")
