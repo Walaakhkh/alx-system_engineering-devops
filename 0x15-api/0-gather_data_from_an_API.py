@@ -44,7 +44,8 @@ if __name__ == "__main__":
     completed = [todo.get("title") for todo in todos if todo.get("completed")]
     total_tasks = len(todos)
 
-    print(f"Employee {user.get('name')} is done with tasks({len(completed)}/{total_tasks}):")
+    print(f"Employee {user.get('name')} is done with tasks({len(completed)}/"
+          f"{total_tasks}):")
 
     for task in completed:
         print(f"\t {task}")
