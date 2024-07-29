@@ -15,12 +15,15 @@ if __name__ == "__main__":
 
     username = user.get("username")
 
-    params = {"userId" user_id}
+    params = {"userId": user_id}
 
     todos_response =requests.get(url + "todos", params=params)
 
-    todos_response.json()
+    todos = todos_response.json()
     
     with open("{}.csv".format(user_id), "w", newline="") as csvfile:
-        writer = csv.
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
 
+        for todo in todos:
+            writer.writerow([user_id, username, todo.get("completed"),
+                 todo.get("tiltle")])
