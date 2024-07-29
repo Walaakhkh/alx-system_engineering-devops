@@ -1,7 +1,6 @@
 #!/bin/env bash
 
 # Script to listen on port 98 on localhost and display incoming text
-# Ensure the script is executable: chmod +x 100-port_listening_on_localhost
 
 # Start listening on port 98
 nc -l -p 98 -k
