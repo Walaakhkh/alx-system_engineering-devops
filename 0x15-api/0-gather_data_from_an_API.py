@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """
 0-gather_data_from_an_API.py
 
@@ -28,7 +29,7 @@ if __name__ == "__main__":
     user = user_response.json()
 
     todos_response = requests.get(f"{url}todos",
-             params={"userId": employee_id})
+                                  params={"userId": employee_id})
 
     if todos_response.status_code != 200:
         print("Todos not found")
@@ -39,6 +40,6 @@ if __name__ == "__main__":
     completed = [todo.get("title") for todo in todos if todo.get("completed")]
 
     print("Employee {} is done with tasks({}/{}):".format(user.get("name"),
-         len(completed), len(todos)))
+                                                          len(completed), len(todos)))
     for complete in completed:
         print("\t {}".format(complete))
