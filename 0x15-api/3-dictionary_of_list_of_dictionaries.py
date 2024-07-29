@@ -9,6 +9,7 @@ exports the data to a JSON file.
 import json
 import requests
 
+
 def fetch_user_data():
     """Fetch user information and to-do lists for all employees."""
     url = "https://jsonplaceholder.typicode.com/"
@@ -30,6 +31,7 @@ def fetch_user_data():
             data_to_export[user_id].append(task_info)
 
     return data_to_export
+
 
 if __name__ == "__main__":
     data_to_export = fetch_user_data()
