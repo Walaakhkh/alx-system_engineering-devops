@@ -1,10 +1,29 @@
 #!/usr/bin/env bash
-# Update package list and install nginx
-apt-get update -y
-apt-get install nginx -y
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening to port 80
+# Serve a page that should return a Hello World string
+#
 
-# Create custom HTML content
-echo "Hello World!" > /var/www/html/index.nginx-debian.html
+echo -e "Updating and installing Nginx.\n"
+sudo apt-get update -y -qq && \
+	sudo apt-get install nginx -y
 
-# Restart nginx without using systemctl (using init.d script instead)
-service nginx restart
+echo -e "\nSetting up some minor stuff.\n"
+
+# Starting nginx service
+sudo ufw allow 'Nginx HTTP'
+
+# Give the user ownership to website file for easy editing
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+
+# Backup defult index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+
+# Create new index
+echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
+
+# Restart nginx
+sudo service nginx restart
+
+echo -e "\nCompleted. \n"
