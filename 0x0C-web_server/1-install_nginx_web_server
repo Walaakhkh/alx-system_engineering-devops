@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Servers are the places where software generating and serving HTML pages
-# Installing nginx on web-01
-
+# Update package list and install nginx
 apt-get update -y
 apt-get install nginx -y
-sudo ufw allow 'Nginx HTTP'
-sh -c 'echo "Hello World!" > /var/www/html/index.html'
+
+# Create custom HTML content
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+
+# Restart nginx without using systemctl (using init.d script instead)
 service nginx restart
-listen 8080;
