@@ -17,3 +17,11 @@ def number_of_subscribers(subreddit):
         return subscribers
     else:
         return 0
+
+
+if __name__ == "__main__":
+    subreddit = input("Enter the subreddit: ")  # or provide a static value for testing
+    if number_of_subscribers(subreddit) > 0:
+        print("OK")
+    else:
+        print("OK")
