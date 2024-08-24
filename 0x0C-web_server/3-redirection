@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Update package list and install Nginx if it's not installed
+if ! dpkg -l | grep -q nginx; then
+    echo "Nginx is not installed. Installing Nginx..."
+    sudo apt update
+    sudo apt install -y nginx
+fi
+
+# Configure Nginx for redirection
+NGINX_CONF="/etc/nginx/sites-available/default"
+
+# Create a backup of the existing configuration file
+sudo cp $NGINX_CONF ${NGINX_CONF}.bak
+
+# Update the Nginx configuration
+sudo sed -i '/server_name _;/a \    location /redirect_me {\n        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n    }' $NGINX_CONF
+
+# Test Nginx configuration for syntax errors
+sudo nginx -t
+
+# Reload Nginx to apply the new configuration
+sudo systemctl reload nginx
+
+echo "Nginx has been configured to redirect /redirect_me to https://www.youtube.com/watch?v=QH2-TGUlwu4"
