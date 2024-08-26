@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# display all processes
+
+pgrep -flx ".*bash.*"
