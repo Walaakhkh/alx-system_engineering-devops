@@ -2,9 +2,9 @@
 # i love you
 echo $$ > /var/run/myscript.pid
 
-trap 'echo "I hate the kill command"' SIGTERM
+trap 'rm -f /var/run/myscript.pid; exit' SIGQUIT
 trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm -f /var/run/myscript.pid; exit' SIGQUIT SIGTERM
+trap 'rm -f /var/run/myscript.pid; exit' SIGTERM
 
 while true; do
     echo "To infinity and beyond"
