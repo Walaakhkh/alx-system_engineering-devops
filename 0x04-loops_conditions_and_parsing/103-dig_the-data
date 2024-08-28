@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Extract IP and HTTP status code, then sort them, count occurrences with uniq, and finally sort by occurrence number in descending order.
+awk '{print $1, $9}' apache-access.log | sort | uniq -c | sort -nr
