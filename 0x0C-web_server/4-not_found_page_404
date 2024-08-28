@@ -1,39 +1,50 @@
 #!/usr/bin/env bash
-# Configures a new ubuntu machine by installing
-# Nginx where it should be listening on port 80
-# Serve a page that would return a Hello World string
-#
+# 4-not_found_page_404.pp
 
-echo -e "Updating and installing Nginx.\n"
-sudo apt-get update -y -qq && \
-	sudo apt-get install nginx -y
+# Ensure the Nginx package is installed
+package { 'nginx':
+  ensure => installed,
+}
 
-echo -e "n\Setting up some minor stuff.\n"
+# Ensure the Nginx service is running
+service { 'nginx':
+  ensure => running,
+  enable => true,
+}
 
-# Starting nginx on service
-sudo service nginx start
+# Define the custom 404 error page
+file { '/var/www/html/404.html':
+  ensure  => file,
+  content => "Ceci n'est pas une page",
+  notify  => Service['nginx'],
+}
 
-# Allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
+# Define the configuration file for Nginx
+file { '/etc/nginx/sites-available/default':
+  ensure  => file,
+  content => '
+server {
+    listen 80;
+    server_name _;
 
-# Give the user ownership to website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
+    # Location for the root of the site
+    location / {
+        try_files $uri $uri/ =404;
+    }
 
-# Backup defult index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+    # Custom 404 error page
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}
+',
+  notify  => Service['nginx'],
+}
 
-# Create new index
-echo -e "Hello World" > /var/www/html/index.nginx-debian.html
-
-# Setting up /redirect_me to a youtupe video
-sudo sed -i '24i\	rewite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/defult
-
-# Set up a 404 page
-echo "Ceci n'est pas une page" >> /var/www/html/error_404.html
-sudo sed -i '25i\	error_page 404 /error_404.html;' /etc/nginx/sites-available/defult
-
-# Restarting nginx
-sudo service nginx restart
-
-echo -e "\nComleted. \n"
+# Ensure the default site configuration is enabled
+file { '/etc/nginx/sites-enabled/default':
+  ensure => link,
+  target => '/etc/nginx/sites-available/default',
+  notify => Service['nginx'],
+}
