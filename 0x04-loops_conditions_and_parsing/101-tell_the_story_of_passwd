@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # This script tells a story based on the content of /etc/passwd
+# Set IFS to ":" to parse fields in /etc/passwd
+IFS=":"
 
-# Read the /etc/passwd file line by line
-while IFS=: read -r username _ user_id _ _ home_dir shell; do
-    # Print the story for each user
-    echo "The user $username is part of the $user_id gang, lives in $home_dir and rides $shell. $user_id's place is protected by the passcode x, more info about the user here: $username"
+# Read /etc/passwd line by line
+while read -r username password userid groupid info homedir shell; do
+  # Print the formatted output
+  echo "The user $username is part of the $groupid gang, lives in $homedir and rides $shell. $userid's place is protected by the passcode $password, more info about the user here: $info"
 done < /etc/passwd
