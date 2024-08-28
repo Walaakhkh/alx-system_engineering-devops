@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This script parses the Apache log file to display the IP and HTTP status code.
 
 # Use awk to print the IP and HTTP status code from the log file
