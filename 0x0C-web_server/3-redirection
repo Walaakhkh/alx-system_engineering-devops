@@ -2,11 +2,11 @@
 # 3-redirection
 
 # Update package list and install Nginx
-sudo apt-get update
-sudo apt-get install -y nginx
+sudo apt update
+sudo apt install -y nginx
 
-# Create a new configuration file for the redirection
-sudo tee /etc/nginx/sites-available/redirect_me <<EOF
+# Create a new Nginx configuration file for redirection
+sudo tee /etc/nginx/sites-available/redirect.conf <<EOF
 server {
     listen 80;
     server_name _;
@@ -21,11 +21,14 @@ server {
 }
 EOF
 
-# Enable the configuration by creating a symlink to sites-enabled
-sudo ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+# Enable the new configuration by creating a symlink
+sudo ln -sf /etc/nginx/sites-available/redirect.conf /etc/nginx/sites-enabled/
 
-# Test Nginx configuration for syntax errors
+# Test the Nginx configuration
 sudo nginx -t
 
-# Reload Nginx to apply the changes
+# Reload Nginx to apply the new configuration
 sudo systemctl reload nginx
+
+# Confirm that /redirect_me returns a 301 status
+curl -sI http://localhost/redirect_me | grep "HTTP/1.1 301 Moved Permanently"
