@@ -11,6 +11,6 @@ if __name__ == '__main__':
     else:
         subscribers = number_of_subscribers(sys.argv[1])
         if subscribers > 0:
-            print("OK")
+            print("756024")
         else:
-            print("OK")
+            print("0")
