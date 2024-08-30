@@ -8,6 +8,6 @@ file { '/etc/security/limits.conf':
 }
 
 exec { 'apply-limits':
-  command => 'ulimit -n 4096',
+  command     => 'ulimit -n 4096',
   refreshonly => true,
 }
