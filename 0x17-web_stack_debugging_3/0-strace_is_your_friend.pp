@@ -1,13 +1,8 @@
-# Find out why Apache is returning a 500 error
-# Ensure the missing PHP module is installed
+# 0-strace_is_your_friend.pp
+
+# Ensure the necessary PHP module is installed
 package { 'php-mysql':
   ensure => installed,
-}
-
-# Ensure the Apache service is running
-service { 'apache2':
-  ensure => running,
-  enable => true,
 }
 
 # Ensure correct file permissions for the web directory
