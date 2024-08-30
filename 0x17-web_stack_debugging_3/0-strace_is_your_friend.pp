@@ -1,4 +1,8 @@
-#!/usr/bin/env puppet
+# Find out why Apache is returning a 500 error
+# Ensure the missing PHP module is installed
+package { 'php-mysql':
+  ensure => installed,
+}
 
 # Ensure the Apache service is running
 service { 'apache2':
@@ -6,31 +10,17 @@ service { 'apache2':
   enable => true,
 }
 
-# Ensure the necessary directory and file permissions are set
-file { '/var/www/html/wp-config.php':
-  ensure  => file,
-  source  => 'puppet:///modules/my_module/wp-config.php',
-  owner   => 'www-data',
-  group   => 'www-data',
-  mode    => '0644',
-  require => File['/var/www/html'],
-}
-
-file { '/var/www/html':
+# Ensure correct file permissions for the web directory
+file { '/var/www/html/':
   ensure  => directory,
   owner   => 'www-data',
   group   => 'www-data',
   mode    => '0755',
+  recurse => true,
 }
 
-# Ensure the correct PHP version is installed
-package { 'php':
-  ensure => installed,
-}
-
-# Restart Apache to apply changes
-exec { 'restart_apache':
-  command => '/usr/sbin/service apache2 restart',
-  path    => ['/usr/sbin', '/usr/bin'],
-  notify  => Service['apache2'],
+# Ensure the Apache service is running and enabled
+service { 'apache2':
+  ensure => running,
+  enable => true,
 }
