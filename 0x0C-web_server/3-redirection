@@ -1,34 +1,10 @@
 #!/usr/bin/env bash
-# 3-redirection
+# Servers are the peice of software generating and serving HTTP pages
+# Installing nginx on web-01
 
-# Update package list and install Nginx
-sudo apt update
-sudo apt install -y nginx
-
-# Create a new Nginx configuration file for redirection
-sudo tee /etc/nginx/sites-available/redirect.conf <<EOF
-server {
-    listen 80;
-    server_name _;
-
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
-
-    location / {
-        try_files \$uri \$uri/ =404;
-    }
-}
-EOF
-
-# Enable the new configuration by creating a symlink
-sudo ln -sf /etc/nginx/sites-available/redirect.conf /etc/nginx/sites-enabled/
-
-# Test the Nginx configuration
-sudo nginx -t
-
-# Reload Nginx to apply the new configuration
-sudo systemctl reload nginx
-
-# Confirm that /redirect_me returns a 301 status
-curl -sI http://localhost/redirect_me | grep "HTTP/1.1 301 Moved Permanently"
+apt-get update -y
+apt-get install nginx -y
+sudo ufw allow 'Nginx HTTP'
+sh -c 'echo "Hello World!" > /var/www/html/index.html
+sed -i '/listen 80 defult_server/a rewrite ^/redirect_me https://www.youtupe.com/@walaacoder permenet;' /etc/nginx/sites-available/default
+service nginx restart
