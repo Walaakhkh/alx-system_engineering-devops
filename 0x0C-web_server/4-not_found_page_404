@@ -1,50 +1,37 @@
 #!/usr/bin/env bash
-# 4-not_found_page_404.pp
+# Installing Nginx with the following configurations:
+#+	Listens on port 80
+#+	Returns a page containing "Holberton School" when queried
+#+	at the root with curl GET request.
+# Configres /redirect_me as a "301 Moved Permenently".
+# Includes a custom 404 page containing "Ceci n'est pas une page"
 
-# Ensure the Nginx package is installed
-package { 'nginx':
-  ensure => installed,
-}
+apt-get update
+apt-get install -y nginx
 
-# Ensure the Nginx service is running
-service { 'nginx':
-  ensure => running,
-  enable => true,
-}
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Holberton School" > /etc/nginx/html/index.html
+touch /etc/nginx/html/404.html
+echo "Ceci n'est pas une page" > /etc/nginx/html/404.html
 
-# Define the custom 404 error page
-file { '/var/www/html/404.html':
-  ensure  => file,
-  content => "Ceci n'est pas une page",
-  notify  => Service['nginx'],
-}
-
-# Define the configuration file for Nginx
-file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  content => '
-server {
+printf %s "server {
     listen 80;
-    server_name _;
+    listen [::]:80 defult_server;
+    root   /etc/nginx/html;
+    index  index.html index.htm;
 
     # Location for the root of the site
-    location / {
-        try_files $uri $uri/ =404;
+    location /redirect_me {
+        return 301 http://cuberule.com/;
     }
 
     # Custom 404 error page
     error_page 404 /404.html;
     location = /404.html {
-        internal;
+        root /etc/nginx/html;
+	internal;
     }
-}
-',
-  notify  => Service['nginx'],
-}
+}" > /etc/nginx/sites-available/defult
 
-# Ensure the default site configuration is enabled
-file { '/etc/nginx/sites-enabled/default':
-  ensure => link,
-  target => '/etc/nginx/sites-available/default',
-  notify => Service['nginx'],
-}
+service nginx restart
