@@ -1,37 +1,26 @@
 #!/usr/bin/env bash
 # Installing Nginx with the following configurations:
-#+	Listens on port 80
-#+	Returns a page containing "Holberton School" when queried
-#+	at the root with curl GET request.
+# Listens on port 80
+# Returns a page containing "Holberton School" when queried
+# at the root with curl GET request.
 # Configres /redirect_me as a "301 Moved Permenently".
 # Includes a custom 404 page containing "Ceci n'est pas une page"
 
-apt-get update
-apt-get install -y nginx
+# Update package list and install Nginx if not already installed
+sudo apt-get update
+sudo apt-get install -y nginx
 
-mkdir /etc/nginx/html
-touch /etc/nginx/html/index.html
-echo "Holberton School" > /etc/nginx/html/index.html
-touch /etc/nginx/html/404.html
-echo "Ceci n'est pas une page" > /etc/nginx/html/404.html
+# Create a backup of the default configuration file
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-printf %s "server {
-    listen 80;
-    listen [::]:80 defult_server;
-    root   /etc/nginx/html;
-    index  index.html index.htm;
+# Create a custom 404 error page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
 
-    # Location for the root of the site
-    location /redirect_me {
-        return 301 http://cuberule.com/;
-    }
+# Configure Nginx to use the custom 404 error page
+sudo sed -i '/server {/a \ \ \ \ error_page 404 /404.html;\n\ \ \ \ location = /404.html {\n\ \ \ \ \ \ \ \ root /var/www/html;\n\ \ \ \ \ \ \ \ internal;\n\ \ \ \ }' /etc/nginx/sites-available/default
 
-    # Custom 404 error page
-    error_page 404 /404.html;
-    location = /404.html {
-        root /etc/nginx/html;
-	internal;
-    }
-}" > /etc/nginx/sites-available/defult
+# Test Nginx configuration for syntax errors
+sudo nginx -t
 
-service nginx restart
+# Restart Nginx to apply the changes
+sudo service nginx restart
