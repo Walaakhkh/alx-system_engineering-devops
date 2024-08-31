@@ -5,6 +5,6 @@
 apt-get update -y
 apt-get install nginx -y
 sudo ufw allow 'Nginx HTTP'
-sh -c 'echo "Hello World!" > /var/www/html/index.html
+sh -c 'echo "Hello World!" > /var/www/html/index.html'
 sed -i '/listen 80 defult_server/a rewrite ^/redirect_me https://www.youtupe.com/@walaacoder permenet;' /etc/nginx/sites-available/default
 service nginx restart
