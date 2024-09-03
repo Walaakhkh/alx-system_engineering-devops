@@ -57,4 +57,4 @@ else
 fi
 
 # Output message with server names as required
-echo "HAProxy is set up with backend servers: web-01 and web-02"
+echo '["web-01", "web-02"]'
