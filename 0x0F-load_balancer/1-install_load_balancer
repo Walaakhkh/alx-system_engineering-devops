@@ -34,7 +34,7 @@ defaults
     timeout http-request 10s
 
 frontend clickviral-tech-frontend
-    bind *:80'
+    bind ':80'
     default_backend clickviral-tech-backend
 
 backend clickviral-tech-backend
@@ -55,3 +55,6 @@ if [ "$(pgrep -c haproxy)" -le 0 ]; then
 else
     sudo service haproxy restart
 fi
+
+# Output message with server names as required
+echo "HAProxy is set up with backend servers: web-01 and web-02"
