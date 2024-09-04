@@ -7,13 +7,15 @@ import requests
 
 
 def number_of_subscribers(subreddit):
-    """Queries the Reddit API and returns the number of subscribers for a given subreddit."""
+    """Queries the Reddit API and returns the number of
+	subscribers for a given subreddit."""
     # Define the URL for the subreddit
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
 
     # Set the User-Agent header to avoid Too Many Requests errors
     headers = {
-        'User-Agent': 'python:subreddit.subscriber.counter:v1.0 (by /u/yourusername)'
+        'User-Agent':
+	'python:subreddit.subscriber.counter:v1.0 (by /u/yourusername)'
     }
 
     try:
