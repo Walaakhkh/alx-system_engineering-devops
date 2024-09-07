@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 # Configure an Nginx server to listen on port 80
 
-# remove the default Nginx configration file
-rm /etc/nginx/sites-enabled/default
-# Configure an Nginx server to listen on port 80 for all active IPv4
-ln -s /etc/nginx/sites-available/default
-# restart nginx
+# Update package list and install Nginx if not already installed
+apt-get update
+apt-get -y install nginx
+
+# Configure Nginx to listen on port 80 for all active IPv4 IPs
+sed -i 's/listen 80 default_server;/listen 80 default_server;\n\tlisten [::]:80 default_server;/' /etc/nginx/sites-available/default
+
+# Allow traffic on port 80 through the firewall
+ufw allow 80/tcp
+
+# Restart Nginx to apply changes
 service nginx restart
