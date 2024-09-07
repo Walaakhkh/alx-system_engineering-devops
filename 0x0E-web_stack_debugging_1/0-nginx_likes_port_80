@@ -1,20 +1,7 @@
 #!/usr/bin/env bash
 # Configure an Nginx server to listen on port 80
 
-# Install nginx if not already installed
 sudo apt-get update
 sudo apt-get install -y nginx
-
-# Ensure nginx is running
+sudo service nginx enable
 sudo service nginx start
-
-# Check if nginx is configured to listen on port 80 and fix any duplicate listen directives
-if ! grep -q 'listen 80;' /etc/nginx/sites-enabled/default; then
-    sudo sed -i '/listen 80 default_server;/a \ \tlisten [::]:80 default_server;' /etc/nginx/sites-enabled/default
-fi
-
-# Test nginx configuration
-sudo nginx -t
-
-# Restart nginx to apply changes
-sudo service nginx restart
