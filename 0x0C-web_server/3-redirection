@@ -1,17 +1,36 @@
 #!/usr/bin/env bash
-# Servers are the peice of software generating and serving HTTP pages
-# Installing nginx on web-01
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening on port 80
+# Serve a page that would return a Hello World string
+#
 
-apt-get update -y
-apt-get install nginx -y
+
+echo -e "Updating and installing Nginx.\n"
+sudo apt-get update -y -qq && \
+         sudo apt-get install nginx -y
+
+echo -e "\nSetting up some minor stuff.\n"
+
+# starting nginx service
+sudo service nginx start
+
+# allowing nginx on firewall
 sudo ufw allow 'Nginx HTTP'
 
-# Create a backup of the default configuration file
-sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+# Give the user ownership to website files for easy editing
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
 
-sh -c 'echo "Hello World!" > /var/www/html/index.html'
-sudo sed -i '/listen 80 defult_server/a rewrite ^/redirect_me https://www.youtupe.com/@walaacoder permenet;' /etc/nginx/sites-available/default
+# Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
 
-sudo nginx -t
+# Creating new index
+echo -e "Hello World!" > /var/www/html/index.nginx-debian.html
 
-service nginx restart
+# Setting up /redirect_me to a youtube video
+sudo sed -i '24i\       rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+
+# Restarting nginx
+sudo service nginx restart
+
+echo -e "\nCompleted.\n"
