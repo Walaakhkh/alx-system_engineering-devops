@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
+#!/bin/bash
+find . -type f -name "*.gif" -print0 | xargs -0 -I{} sh -c 'echo "${1%.gif}"' _ {} | sort -f
 
-# Find all .gif files, including hidden files, recursively
-find . -type f -name "*.gif" | while read -r file; do
-    # Remove the .gif extension and print the result
-    echo "${file%.gif}"
-done | sort -f
